@@ -1,0 +1,14 @@
+{
+  "jobs": [
+    {
+      "job_number": 1,
+      "date": "2026-01-13",
+      "result": "---JOB_APPLIED---\nCompany: Cua (X25)\nTitle: Founding Engineer, Infra & Agent Systems\nURL: https://www.workatastartup.com/jobs/78130\nStatus: success\nNotes: Applied with a personalized message tailored to the role (Infra & Agent Systems, TypeScript, Node.js, Docker, AWS).\n---END---",
+      "company": "Cua (X25)",
+      "title": "Founding Engineer, Infra & Agent Systems",
+      "url": "https://www.workatastartup.com/jobs/78130",
+      "applied_at": "2026-01-13T23:09:10.481081"
+    }
+  ],
+  "total_applied": 1
+}

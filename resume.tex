@@ -1,0 +1,95 @@
+\documentclass[a4paper,11pt]{article}
+
+% PACKAGES
+\usepackage{fontspec}
+\setmainfont{Roboto}[
+    Path = ./fonts/roboto/,
+    Extension = .ttf,
+    UprightFont = *-Regular,
+    BoldFont = *-Bold
+]
+\usepackage{geometry} 
+\usepackage{hyperref} 
+\usepackage{xcolor}   
+\usepackage{titlesec} 
+\usepackage{enumitem} 
+
+% PAGE SETUP
+\geometry{a4paper, margin=0.5in} 
+\pagestyle{empty} 
+
+% LINK COLORING
+\definecolor{linkcolor}{rgb}{0.1, 0.4, 0.7} 
+\hypersetup{
+    colorlinks=true,
+    linkcolor=linkcolor,
+    urlcolor=linkcolor,
+}
+
+% CUSTOM SECTION FORMATTING
+\titleformat{\section}{\large\scshape\bfseries}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{1.2ex plus 1ex minus .2ex}{0.8ex plus .2ex}
+
+% CUSTOM LIST FORMATTING
+\setlist[itemize]{leftmargin=*, label=\textbullet, itemsep=0.1em, topsep=0.2em}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    {\Huge\scshape\bfseries Suraj Kushwaha} \\
+    \vspace{1ex}
+    {\large Senior Backend Engineer | Product \& Extensibility Platforms} \\
+    \vspace{1ex}
+    +91 91067 64917 \quad\textbar\quad
+    \href{mailto:jobs@surajkuushwaha.com}{jobs@surajkuushwaha.com} \quad\textbar\quad
+    \href{https://github.com/surajkuushwaha}{github/surajkuushwaha} \quad\textbar\quad
+    \href{https://linkedin.com/in/surajkuushwaha}{linkedin} 
+\end{center}
+
+% --- PROFESSIONAL SUMMARY ---
+\vspace{1ex}
+Product-minded Backend Engineer with over 4+ years of impact (normalized) specializing in scalable Node.js/TypeScript ecosystems. Proven track record in designing public-facing APIs, leading zero-downtime architectural migrations, and building event-driven systems. Expert in navigating the trade-offs of distributed systems while maintaining a deep focus on the end-user experience for content creators and B2B SaaS platforms.
+
+% --- WORK EXPERIENCE ---
+\section*{Work Experience}
+
+\textbf{SDE I (Backend \& Infrastructure)} \hfill \textit{JULY 2022 - PRESENT} \\
+\textit{CultureX Entertainment Private Limited} \hfill \textit{Gujarat, India}
+\begin{itemize}
+    \item \textbf{Extensibility \& APIs:} Owned the end-to-end lifecycle of a public-facing microservice, transforming internal tooling into a high-availability API product; managed documentation and versioning for external developers.
+    \item \textbf{Architecture Leadership:} Led a strategic migration from multi-database silos to a unified SaaS architecture for 30+ global brands, prioritizing data consistency and zero-downtime delivery.
+    \item \textbf{Systems Thinking:} Architected event-driven social listening tools using AWS EventBridge, SQS, and Lambda; implemented idempotent batch processing to handle 10M+ monthly requests with high reliability.
+    \item \textbf{Platform Evolution:} Scaled backend infrastructure on AWS (EC2, SQS, Lambda) to support real-time brand tracking, improving system observability and reducing manual debugging effort by 40\%.
+    \item \textbf{Collaborative Delivery:} Developed and launched 10+ MVPs for an influencer marketing platform, collaborating across teams to balance rapid feature delivery with clean, long-term abstractions.
+    \item \textbf{Engineering Culture:} Influenced team standards through rigorous code reviews and mentoring, advocating for modern TypeScript patterns and performance-first backend design.
+\end{itemize}
+
+% --- TECHNICAL SKILLS ---
+\section*{Technical Skills}
+\textbf{Core Stack:} Node.js, TypeScript, GraphQL, JavaScript (ES6+), Golang. \\
+\textbf{Backend \& Data:} Express.js, Hono, MongoDB, PostgreSQL, MySQL, Redis, RESTful APIs, Microservices. \\
+\textbf{Cloud \& Infrastructure:} AWS (Lambda, SQS, SNS, EventBridge, S3, EC2), Docker, GitHub Actions, CI/CD. \\
+\textbf{AI \& Tooling:} Advanced use of LLMs for debugging, automated documentation, and code refactoring; Linux, Git, Tmux.
+
+% --- PROJECTS & CREATIVE WORK ---
+\section*{Projects \& Content Contribution}
+\textbf{Open Read (Creator/Developer)} \hfill \href{https://github.com/surajkuushwaha/open-read}{github.com/surajkuushwaha/open-read}
+\begin{itemize}
+    \item Developed a cross-browser extension (Plasmo, React, TS) to streamline content accessibility, demonstrating a personal stake in the digital content and publishing ecosystem.
+    \item Maintained an open-source workflow, managing community feedback and cross-platform compatibility (Chrome/Firefox/Safari).
+\end{itemize}
+
+% --- PROFESSIONAL STRENGTHS ---
+\section*{Professional Strengths}
+\begin{itemize}
+    \item \textbf{Remote/Async Native:} Fluent in written communication, providing generous context in pull requests and documentation to drive progress without needing real-time syncs.
+    \item \textbf{Pragmatic Performance:} Experienced in measuring and prioritizing performance bottlenecks in high-traffic B2B environments.
+\end{itemize}
+
+% --- EDUCATION ---
+\section*{Education}
+\textbf{Bachelor of Computer Engineering} \hfill \textit{Government Engineering College, Modasa}
+
+\end{document}

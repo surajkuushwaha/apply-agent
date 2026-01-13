@@ -1,0 +1,11 @@
+# Browser Use - AI Browser Automation
+browser-use>=0.1.0
+
+# Environment variables
+python-dotenv>=1.0.0
+
+# Google Gemini for cover letter generation
+google-generativeai>=0.5.0
+
+# Required for browser-use (usually installed automatically)
+playwright>=1.40.0

@@ -1,0 +1,95 @@
+{
+  "jobs": [
+    {
+      "portal": "workatastartup",
+      "job_number": 1,
+      "date": "2026-01-13",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: Fractional (W21)\nTitle: Staff Software Engineer\nURL: https://www.workatastartup.com/jobs/66348\nScore: 36\nStatus: success\nCoverLetterUsed: true\nResumeUploaded: false\nTechStack: Typescript, Postgres, GraphQL\nSalaryRange: $165K - $185K\nNotes: Applied using a manually drafted cover letter after the generate_cover_letter tool failed.\n---END---",
+      "company": "Fractional (W21)",
+      "title": "Staff Software Engineer",
+      "url": "https://www.workatastartup.com/jobs/66348",
+      "score": 36,
+      "status": "success",
+      "cover_letter_used": true,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Typescript",
+        "Postgres",
+        "GraphQL"
+      ],
+      "salary_range": "$165K - $185K",
+      "notes": "Applied using a manually drafted cover letter after the generate_cover_letter tool failed.",
+      "id": "c67866cf-14a1-4c07-aa97-7e06ed5055d5",
+      "applied_at": "2026-01-13T23:58:33.650615"
+    },
+    {
+      "portal": "workatastartup",
+      "job_number": 1,
+      "date": "2026-01-14",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: StackAI (W23)\nTitle: AI Infrastructure Engineer\nURL: https://www.workatastartup.com/jobs/81665\nScore: 74\nStatus: success\nCoverLetterUsed: true\nResumeUploaded: false\nTechStack: Python, Temporal, Redis, Airflow, Celery, RabbitMQ, Docker, Kubernetes, AWS, GCP, Terraform, LLM\nSalaryRange: Not specified\nNotes: Manual cover letter used due to failure of generate_cover_letter tool.\n---END---\n\nAttachments:\n\ntodo.md:\n# Work at a Startup Job Application\n\n## Candidate Profile & Goals\n- Name: Suraj Kushwaha\n- Target Portal: Work at a Startup\n- Resume Path: /Users/suraj/Personal/projects/browser-use/Suraj_Kushwaha_Resumes-1.pdf\n\n## Steps:\n- [x] Navigate to https://www.workatastartup.com/\n- [x] Click \"Log in\" or \"Sign in\"\n- [x] Enter Email/Username: surajkuushwaha\n- [x] Enter Password: Suraj@9106\n- [x] Submit and wait for dashboard\n- [x] Search/filter for jobs (Backend Engineer, Software Engineer, Platform Engineer, Remote, Startup Seed-Series B) - A",
+      "company": "StackAI (W23)",
+      "title": "AI Infrastructure Engineer",
+      "url": "https://www.workatastartup.com/jobs/81665",
+      "score": 74,
+      "status": "success",
+      "cover_letter_used": true,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Python",
+        "Temporal",
+        "Redis",
+        "Airflow",
+        "Celery",
+        "RabbitMQ",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "GCP",
+        "Terraform",
+        "LLM"
+      ],
+      "salary_range": "Not specified",
+      "notes": "Manual cover letter used due to failure of generate_cover_letter tool.",
+      "id": "dbb247fb-770c-43f9-82bc-ce82e40c5f55",
+      "applied_at": "2026-01-14T00:05:23.720647"
+    },
+    {
+      "portal": "workatastartup",
+      "job_number": 1,
+      "date": "2026-01-14",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: StackAI (W23)\nTitle: Forward Deployed AI Engineer\nURL: https://www.workatastartup.com/jobs/71033\nScore: 58\nStatus: failed\nCoverLetterUsed: true\nResumeUploaded: false\nTechStack: Next.js, Python, Machine Learning, PostgreSQL, MongoDB, Typescript, FastAPI, Supabase\nSalaryRange: $120K - $160K\nNotes: Application failed due to reaching the weekly limit of 5 applications on Work at a Startup.\n---END---",
+      "company": "StackAI (W23)",
+      "title": "Forward Deployed AI Engineer",
+      "url": "https://www.workatastartup.com/jobs/71033",
+      "score": 58,
+      "status": "failed",
+      "cover_letter_used": true,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Next.js",
+        "Python",
+        "Machine Learning",
+        "PostgreSQL",
+        "MongoDB",
+        "Typescript",
+        "FastAPI",
+        "Supabase"
+      ],
+      "salary_range": "$120K - $160K",
+      "notes": "Application failed due to reaching the weekly limit of 5 applications on Work at a Startup.",
+      "id": "e9da3ccc-98fb-43ef-8ed7-448e58c89a9f",
+      "applied_at": "2026-01-14T00:14:55.575138"
+    }
+  ],
+  "stats": {
+    "total_applied": 3,
+    "by_portal": {
+      "workatastartup": 3
+    },
+    "by_status": {
+      "success": 2,
+      "failed": 1
+    },
+    "avg_score": 56.0
+  }
+}
