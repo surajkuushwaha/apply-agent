@@ -79,16 +79,48 @@
       "notes": "Application failed due to reaching the weekly limit of 5 applications on Work at a Startup.",
       "id": "e9da3ccc-98fb-43ef-8ed7-448e58c89a9f",
       "applied_at": "2026-01-14T00:14:55.575138"
+    },
+    {
+      "portal": "workatastartup",
+      "job_number": 1,
+      "date": "2026-01-14",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: Confident AI\nTitle: Founding Fullstack (Backend) Engineer\nURL: https://www.workatastartup.com/jobs/83236\nScore: 56\nStatus: failed\nCoverLetterUsed: true\nResumeUploaded: false\nTechStack: Python, Node.js, TypeScript, PostgreSQL, Docker, Kubernetes, AWS, GCP, Azure, multi-tenant architecture, authentication systems, data security (SOC 2, HIPAA)\nSalaryRange: $100K - $200K\nNotes: Application failed due to reaching the weekly limit of 5 applications on the platform.\n---END---",
+      "company": "Confident AI",
+      "title": "Founding Fullstack (Backend) Engineer",
+      "url": "https://www.workatastartup.com/jobs/83236",
+      "score": 56,
+      "status": "failed",
+      "cover_letter_used": true,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Python",
+        "Node.js",
+        "TypeScript",
+        "PostgreSQL",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "GCP",
+        "Azure",
+        "multi-tenant architecture",
+        "authentication systems",
+        "data security (SOC 2",
+        "HIPAA)"
+      ],
+      "salary_range": "$100K - $200K",
+      "notes": "Application failed due to reaching the weekly limit of 5 applications on the platform.",
+      "id": "c74ef9ee-4022-4caa-94aa-2ce2dfdfc3f5",
+      "applied_at": "2026-01-14T10:30:50.672250"
     }
   ],
   "stats": {
-    "total_applied": 3,
+    "total_applied": 4,
     "by_portal": {
-      "workatastartup": 3
+      "workatastartup": 4
     },
     "by_status": {
       "success": 2,
-      "failed": 1
+      "failed": 2
     },
     "avg_score": 56.0
   }

@@ -6,27 +6,24 @@ import os
 load_dotenv()
 
 TASK = """
-1. Go to https://www.workatastartup.com/ and click "Log in"
-2. Login with:
-   - Email/Username: surajkuushwaha
-   - Password: Suraj@9106
+1. Go to https://www.workatastartup.com/jobs/83228
 
-3. After login, search/filter for jobs matching:
-   - Role: Backend Engineer, Software Engineer, or Full Stack Engineer
-   - Skills: Node.js, TypeScript, AWS, Microservices
-   - Experience: 2-4 years
+2. Extract the following company and job details from the page:
+   - Company Name
+   - YC Batch (e.g., S22, W23)
+   - Company Description/Tagline
+   - Job Title
+   - Salary Range
+   - Location
+   - Job Type (Full-time, Part-time, Contract)
+   - Required Experience
+   - Visa Requirements
+   - Key Responsibilities (summarized)
+   - Required Skills/Qualifications (summarized)
+   - Benefits (if listed)
+   - Interview Process (if listed)
 
-4. Find the BEST matching job for a candidate with:
-   - 2.5+ years backend experience with Node.js, TypeScript, AWS
-   - Microservices architecture (handling 5M+ requests/month)
-   - MySQL, PostgreSQL, Redis, Docker, CI/CD experience
-   - B2B SaaS background
-
-5. Click on the most relevant job listing and apply.
-   - Fill any required fields
-   - Submit the application
-
-6. Return the job title, company name, and confirmation of application submission.
+3. Return all extracted details in a structured format.
 """
 
 async def main():

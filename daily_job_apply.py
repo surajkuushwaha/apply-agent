@@ -18,6 +18,16 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 # =============================================================================
 
 JOBS_TO_APPLY = 5
+
+# =============================================================================
+# MODEL CONFIGURATION
+# =============================================================================
+
+# Model for generating cover letters (fast, cost-effective for text generation)
+COVER_LETTER_MODEL = "gemini-2.5-flash"
+
+# Model for browser automation agent (handles complex multi-step interactions)
+BROWSER_AGENT_MODEL = "gemini-2.5-flash"
 APPLIED_JOBS_FILE = Path("applied_jobs_v2.json")
 RESUME_PATH = Path("/Users/suraj/Personal/projects/browser-use/Suraj_Kushwaha_Resumes-1.pdf")
 
@@ -169,7 +179,7 @@ def generate_cover_letter(job_title: str, company: str, job_description: str) ->
     """
 
     try:
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel(COVER_LETTER_MODEL)
         response = model.generate_content(prompt)
         return response.text
     except Exception as e:
@@ -393,7 +403,7 @@ async def apply_to_job_on_portal(portal_key: str, job_number: int, total_jobs: i
     applied_jobs = get_applied_job_identifiers()
     task = build_portal_task(portal_key, job_number, total_jobs, applied_jobs)
 
-    llm = ChatGoogle(model="gemini-flash-latest")
+    llm = ChatGoogle(model=BROWSER_AGENT_MODEL)
     agent = Agent(
         task=task,
         llm=llm,
