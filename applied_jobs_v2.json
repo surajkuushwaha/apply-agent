@@ -12,11 +12,7 @@
       "status": "success",
       "cover_letter_used": true,
       "resume_uploaded": false,
-      "tech_stack": [
-        "Typescript",
-        "Postgres",
-        "GraphQL"
-      ],
+      "tech_stack": ["Typescript", "Postgres", "GraphQL"],
       "salary_range": "$165K - $185K",
       "notes": "Applied using a manually drafted cover letter after the generate_cover_letter tool failed.",
       "id": "c67866cf-14a1-4c07-aa97-7e06ed5055d5",
@@ -111,12 +107,20 @@
       "notes": "Application failed due to reaching the weekly limit of 5 applications on the platform.",
       "id": "c74ef9ee-4022-4caa-94aa-2ce2dfdfc3f5",
       "applied_at": "2026-01-14T10:30:50.672250"
+    },
+    {
+      "portal": "workatastartup",
+      "job_number": 1,
+      "date": "2026-01-19",
+      "raw_result": "I have reached the maximum number of steps and am unable to complete the job application task as intended. I successfully navigated to the Work at a Startup website, logged in, and applied 'Remote only' and 'Company stage' (Seed to Series B) filters. However, I encountered a persistent issue with the 'Role' filter, which prevented me from filtering jobs by 'Backend Engineer', 'Software Engineer', or 'Platform Engineer'.\n\nI extracted job postings from the page and evaluated several jobs using the `calculate_match_score` tool. Unfortunately, none of the jobs processed so far met the minimum score requirement of 30. For example:\n- 'QA Engineer' at 'VectorShift' scored 8/100.\n- 'Designer' at 'VectorShift' scored 8/100.\n- 'Founding BDR' at 'Feather' scored 0/100.\n- 'Full Stack Software Engineer Intern [Summer 2026]' at 'Swif.ai' scored 0/100.\n- 'Sales Intern [Summer 2026]' at 'Swif.ai' scored 0/100.\n\nDue to the inability to effectively filter by role and the low match scores of the availabl",
+      "id": "1eb442c6-9641-4d29-a8e3-d6c5fc1b1702",
+      "applied_at": "2026-01-19T12:24:04.696479"
     }
   ],
   "stats": {
-    "total_applied": 4,
+    "total_applied": 5,
     "by_portal": {
-      "workatastartup": 4
+      "workatastartup": 5
     },
     "by_status": {
       "success": 2,

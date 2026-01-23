@@ -1,2 +1,39 @@
+# Virtual environments
 .venv
+venv/
+env/
+
+# Environment variables
 .env
+.env.local
+
+# Browser sessions (contains login cookies)
+browser_sessions/
+
+# Application data (contains personal job history)
+applied_jobs_v2.json
+applied_jobs.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

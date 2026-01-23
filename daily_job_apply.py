@@ -1,4 +1,4 @@
-from browser_use import Agent, ChatGoogle, Tools, ActionResult
+from browser_use import Agent, Browser, ChatGoogle, Tools, ActionResult
 from dotenv import load_dotenv
 import asyncio
 import os
@@ -30,10 +30,13 @@ COVER_LETTER_MODEL = "gemini-2.5-flash"
 BROWSER_AGENT_MODEL = "gemini-2.5-flash"
 APPLIED_JOBS_FILE = Path("applied_jobs_v2.json")
 RESUME_PATH = Path("/Users/suraj/Personal/projects/browser-use/Suraj_Kushwaha_Resumes-1.pdf")
+SESSION_STORAGE_DIR = Path("browser_sessions")  # Directory to store browser profiles
 
 # Credentials (from .env)
-WORKATASTARTUP_USER = os.getenv("WORKATASTARTUP_USER", "surajkuushwaha")
-WORKATASTARTUP_PASS = os.getenv("WORKATASTARTUP_PASS", "Suraj@9106")
+# Required: WORKATASTARTUP_USER, WORKATASTARTUP_PASS
+# Optional: LINKEDIN_USER, LINKEDIN_PASS (for LinkedIn job applications)
+WORKATASTARTUP_USER = os.getenv("WORKATASTARTUP_USER")
+WORKATASTARTUP_PASS = os.getenv("WORKATASTARTUP_PASS")
 
 # =============================================================================
 # JOB SCORING CONFIGURATION
@@ -45,39 +48,47 @@ BLACKLIST_COMPANIES = [
 
 REQUIRED_KEYWORDS = [
     "backend", "node", "nodejs", "typescript", "aws", "golang", "go",
-    "graphql", "devops", "platform", "api"
+    "graphql", "devops", "platform", "api",
+    # AI/LLM Developer keywords
+    "langchain", "agentic", "llm", "llms", "ai developer", "ai engineer",
+    "automated workflows", "agent workflows", "workflow automation"
 ]
 
 BONUS_KEYWORDS = [
     "remote", "microservices", "saas", "startup", "series a", "series b",
-    "mongodb", "postgresql", "redis", "docker", "kubernetes", "lambda"
+    "mongodb", "postgresql", "redis", "docker", "kubernetes", "lambda",
+    # AI/LLM Bonus keywords
+    "openai", "anthropic", "claude", "gpt", "gemini", "langgraph",
+    "autonomous agents", "multi-agent", "rag", "vector database",
+    "prompt engineering", "fine-tuning", "model deployment"
 ]
 
 MIN_JOB_SCORE = 30  # Minimum score to apply
+REQUIRE_SALARY_RANGE = False  # Set to True to only consider jobs with salary range
 
 # =============================================================================
 # MULTI-PORTAL CONFIGURATION
 # =============================================================================
 
 JOB_PORTALS = {
-    "workatastartup": {
-        "name": "Work at a Startup",
-        "url": "https://www.workatastartup.com/",
-        "login_url": "https://www.workatastartup.com/users/sign_in",
-        "username": WORKATASTARTUP_USER,
-        "password": WORKATASTARTUP_PASS,
-        "search_filters": "Backend Engineer, Software Engineer, Platform Engineer",
-        "needs_login": True,
-    },
-    # "linkedin": {
-    #     "name": "LinkedIn",
-    #     "url": "https://www.linkedin.com/jobs/",
-    #     "login_url": "https://www.linkedin.com/login",
-    #     "username": os.getenv("LINKEDIN_USER", ""),
-    #     "password": os.getenv("LINKEDIN_PASS", ""),
-    #     "search_filters": "Backend Engineer Node.js TypeScript Remote",
+    # "workatastartup": {
+    #     "name": "Work at a Startup",
+    #     "url": "https://www.workatastartup.com/",
+    #     "login_url": "https://www.workatastartup.com/users/sign_in",
+    #     "username": WORKATASTARTUP_USER,
+    #     "password": WORKATASTARTUP_PASS,
+    #     "search_filters": "Backend Engineer, Software Engineer, Platform Engineer, AI Developer, AI Engineer, LLM Engineer",
     #     "needs_login": True,
     # },
+    "linkedin": {
+        "name": "LinkedIn",
+        "url": "https://www.linkedin.com/jobs/",
+        "login_url": "https://www.linkedin.com/login",
+        "username": os.getenv("LINKEDIN_USER", ""),
+        "password": os.getenv("LINKEDIN_PASS", ""),
+        "search_filters": "Backend Engineer Node.js TypeScript Remote AI Developer LangChain Agentic Workflows",
+        "needs_login": True,
+    },
     # "wellfound": {
     #     "name": "Wellfound (AngelList)",
     #     "url": "https://wellfound.com/jobs",
@@ -100,8 +111,8 @@ JOB_PORTALS = {
 
 # Default portal allocation (total should equal JOBS_TO_APPLY)
 PORTAL_ALLOCATION = {
-    "workatastartup": 5,
-    # "linkedin": 2,
+    "workatastartup": 3,
+    "linkedin": 2,
     # "wellfound": 0,
     # "indeed": 0,
 }
@@ -120,10 +131,20 @@ CANDIDATE PROFILE:
 - LinkedIn: linkedin.com/in/surajkuushwaha
 
 CORE STACK:
-- Languages: Node.js, TypeScript, GraphQL, JavaScript (ES6+), Golang
+- Languages: Node.js, TypeScript, GraphQL, JavaScript (ES6+), Golang, Python
 - Backend: Express.js, Hono, MongoDB, PostgreSQL, MySQL, Redis, RESTful APIs, Microservices
 - Cloud: AWS (Lambda, SQS, SNS, EventBridge, S3, EC2), Docker, GitHub Actions, CI/CD
+- AI/LLM: LangChain, LangGraph, Agentic Workflows, LLM Integration, Automated Workflows
 - AI/Tooling: LLMs for debugging/documentation, Linux, Git, Tmux
+
+AI/LLM EXPERIENCE:
+- Built fully automated workflows with LLMs using LangChain agentic patterns
+- Designed and implemented agentic workflows for complex multi-step processes
+- Experience with autonomous agents, multi-agent systems, and workflow automation
+- Integrated LLMs (OpenAI, Anthropic Claude, Google Gemini) into production systems
+- Developed RAG (Retrieval Augmented Generation) pipelines and vector database integrations
+- Created prompt engineering strategies for reliable agent behavior
+- Deployed and scaled LLM-powered applications in production environments
 
 KEY ACHIEVEMENTS:
 - Owned public-facing API microservice (transformed internal tool into high-availability product)
@@ -131,10 +152,12 @@ KEY ACHIEVEMENTS:
 - Architected event-driven systems (EventBridge, SQS, Lambda) handling 100M+ monthly requests
 - Scaled backend infrastructure, reducing manual debugging effort by 40%
 - Developed 40+ MVPs for influencer marketing platform, securing first client
+- Built production-ready agentic workflows automating complex business processes
 
 PROFESSIONAL STRENGTHS:
 - Remote/Async Native: Fluent in written communication, generous context in PRs
 - Pragmatic Performance: Experienced in measuring bottlenecks in high-traffic B2B environments
+- AI/LLM Expertise: Strong background in building reliable, production-grade LLM applications
 
 TARGET ROLES:
 - Senior Backend Engineer
@@ -142,6 +165,10 @@ TARGET ROLES:
 - Platform Engineer
 - API/Extensibility Engineer
 - DevOps Engineer
+- AI Developer / AI Engineer
+- LLM Engineer
+- Agentic Workflow Engineer
+- Automation Engineer (LLM-powered)
 """
 
 # =============================================================================
@@ -313,10 +340,106 @@ def get_applied_job_identifiers() -> list:
 
 
 # =============================================================================
+# BROWSER SESSION MANAGEMENT
+# =============================================================================
+
+def get_browser_for_portal(portal_key: str) -> Browser:
+    """Get or create a persistent browser instance for a portal."""
+    session_dir = SESSION_STORAGE_DIR / portal_key
+    session_dir.mkdir(parents=True, exist_ok=True)
+    
+    return Browser(
+        user_data_dir=str(session_dir),
+        headless=False,  # Set to True if you don't want to see the browser
+    )
+
+
+# =============================================================================
 # TASK BUILDERS
 # =============================================================================
 
-def build_portal_task(portal_key: str, job_number: int, total_jobs: int, applied_jobs: list) -> str:
+def build_search_task(portal_key: str, require_salary_range: bool = False) -> str:
+    """Build the task prompt for searching jobs on a specific portal."""
+    portal = JOB_PORTALS[portal_key]
+    applied_jobs_str = "\n".join(f"  - {job}" for job in get_applied_job_identifiers()[-30:]) if get_applied_job_identifiers() else "  None yet"
+    blacklist_str = ", ".join(BLACKLIST_COMPANIES) if BLACKLIST_COMPANIES else "None"
+
+    login_instructions = ""
+    if portal["needs_login"] and portal["username"]:
+        login_instructions = f"""
+   - Click "Log in" or "Sign in"
+   - Enter Email/Username: {portal["username"]}
+   - Enter Password: {portal["password"]}
+   - Submit and wait for dashboard"""
+
+    salary_filter_note = ""
+    if require_salary_range:
+        salary_filter_note = """
+SALARY RANGE FILTER (REQUIRED):
+- ONLY consider jobs that have a visible salary range
+- Skip any jobs where salary information is "Not specified" or not visible
+- This is a mandatory filter - do not list jobs without salary information"""
+
+    return f"""
+TASK: Search and list matching jobs on {portal["name"]}
+
+{CANDIDATE_PROFILE}
+
+ALREADY APPLIED (DO NOT LIST THESE):
+{applied_jobs_str}
+
+BLACKLISTED COMPANIES (SKIP THESE):
+{blacklist_str}
+{salary_filter_note}
+
+JOB SCORING CRITERIA:
+- Required keywords (+8 each): {", ".join(REQUIRED_KEYWORDS)}
+- Bonus keywords (+4 each): {", ".join(BONUS_KEYWORDS)}
+- Experience match: +10 for 2-4 years, mid-level, senior
+- Remote: +5 bonus
+
+STEPS:
+
+1. Navigate to {portal["url"]}
+{login_instructions}
+
+2. Search/filter for jobs:
+   - Use filters: {portal["search_filters"]}
+   - Look for roles matching: Backend, Platform, API, DevOps, AI Developer, AI Engineer, LLM Engineer
+   - PRIORITIZE roles mentioning: LangChain, agentic workflows, automated workflows with LLMs, LLM integration
+   - Prefer: Remote, Startup (Seed to Series B)
+   {"   - IMPORTANT: Only consider jobs with visible salary range" if require_salary_range else ""}
+
+3. For each job found (up to 20 jobs):
+   - Click to view full details
+   {"   - CHECK: Verify salary range is visible before proceeding" if require_salary_range else ""}
+   - Use calculate_match_score tool to check job score
+   - Extract job information
+
+4. Return this EXACT format for each job found:
+   ---JOB_FOUND---
+   Portal: {portal_key}
+   Company: [company name]
+   Title: [job title]
+   URL: [job url]
+   Score: [calculated score]
+   TechStack: [comma-separated tech mentioned]
+   SalaryRange: [if visible, else "Not specified"]
+   Remote: [yes/no/not specified]
+   Experience: [required experience level]
+   ---END---
+
+IMPORTANT:
+- Use calculate_match_score for each job
+- Skip jobs already in the applied list
+- Skip blacklisted companies
+{"- ONLY list jobs that have a visible salary range (skip if 'Not specified')" if require_salary_range else ""}
+- List up to 20 matching jobs
+- Be thorough in extracting job details
+"""
+
+
+def build_portal_task(portal_key: str, job_number: int, total_jobs: int, applied_jobs: list, require_salary_range: bool = False) -> str:
     """Build the task prompt for a specific portal."""
     portal = JOB_PORTALS[portal_key]
     applied_jobs_str = "\n".join(f"  - {job}" for job in applied_jobs[-30:]) if applied_jobs else "  None yet"
@@ -330,6 +453,14 @@ def build_portal_task(portal_key: str, job_number: int, total_jobs: int, applied
    - Enter Password: {portal["password"]}
    - Submit and wait for dashboard"""
 
+    salary_filter_note = ""
+    if require_salary_range:
+        salary_filter_note = """
+SALARY RANGE FILTER (REQUIRED):
+- ONLY apply to jobs that have a visible salary range
+- Skip any jobs where salary information is "Not specified" or not visible
+- This is a mandatory filter - do not apply to jobs without salary information"""
+
     return f"""
 TASK: Apply to job {job_number} of {total_jobs} on {portal["name"]}
 
@@ -340,6 +471,7 @@ ALREADY APPLIED (DO NOT APPLY TO THESE AGAIN):
 
 BLACKLISTED COMPANIES (SKIP THESE):
 {blacklist_str}
+{salary_filter_note}
 
 JOB SCORING CRITERIA (only apply to jobs scoring >= {MIN_JOB_SCORE}):
 - Required keywords (+8 each): {", ".join(REQUIRED_KEYWORDS)}
@@ -354,14 +486,18 @@ STEPS:
 
 2. Search/filter for jobs:
    - Use filters: {portal["search_filters"]}
-   - Look for roles matching: Backend, Platform, API, DevOps
+   - Look for roles matching: Backend, Platform, API, DevOps, AI Developer, AI Engineer, LLM Engineer
+   - PRIORITIZE roles mentioning: LangChain, agentic workflows, automated workflows with LLMs, LLM integration
    - Prefer: Remote, Startup (Seed to Series B)
+   {"   - IMPORTANT: Only consider jobs with visible salary range" if require_salary_range else ""}
 
 3. Evaluate jobs before applying:
+   {"   - CHECK: Verify salary range is visible before proceeding" if require_salary_range else ""}
    - Use calculate_match_score tool to check job score
    - Only apply if score >= {MIN_JOB_SCORE}
    - Skip blacklisted companies
    - Skip already-applied jobs
+   {"   - SKIP jobs without visible salary range" if require_salary_range else ""}
 
 4. For the selected job:
    - Click to view full details
@@ -389,25 +525,181 @@ IMPORTANT:
 - Use calculate_match_score before applying
 - Use generate_cover_letter when a cover letter field exists
 - Skip jobs already in the applied list
+{"- ONLY apply to jobs that have a visible salary range (skip if 'Not specified')" if require_salary_range else ""}
 - If application fails, try the next matching job
 - Be thorough but efficient
 """
 
 
 # =============================================================================
-# APPLICATION FUNCTIONS
+# SEARCH FUNCTIONS
 # =============================================================================
 
-async def apply_to_job_on_portal(portal_key: str, job_number: int, total_jobs: int) -> dict:
-    """Apply to a single job on a specific portal."""
-    applied_jobs = get_applied_job_identifiers()
-    task = build_portal_task(portal_key, job_number, total_jobs, applied_jobs)
+async def search_jobs_on_portal(portal_key: str, require_salary_range: bool = False) -> list:
+    """Search for jobs on a specific portal without applying."""
+    task = build_search_task(portal_key, require_salary_range)
 
+    # Create persistent browser instance for this portal
+    browser = get_browser_for_portal(portal_key)
+    
     llm = ChatGoogle(model=BROWSER_AGENT_MODEL)
     agent = Agent(
         task=task,
         llm=llm,
         tools=tools,
+        browser=browser,
+        available_file_paths=[str(RESUME_PATH)],
+    )
+
+    portal_name = JOB_PORTALS[portal_key]["name"]
+    print(f"\n{'='*60}")
+    print(f"[{portal_name}] Searching for jobs...")
+    print(f"{'='*60}")
+
+    try:
+        history = await agent.run(max_steps=60)
+        result = history.final_result() if history else "No result"
+
+        # Parse results to extract job information
+        jobs_found = []
+        if result:
+            result_str = str(result)
+            current_job = {}
+            
+            for line in result_str.split("\n"):
+                line = line.strip()
+                if line.startswith("---JOB_FOUND---"):
+                    current_job = {}
+                elif line.startswith("---END---"):
+                    if current_job:
+                        jobs_found.append(current_job)
+                        current_job = {}
+                elif ":" in line:
+                    parts = line.split(":", 1)
+                    if len(parts) == 2:
+                        key = parts[0].strip().lower().replace(" ", "_")
+                        value = parts[1].strip()
+                        if key == "score":
+                            try:
+                                current_job[key] = int(value.split("/")[0])
+                            except:
+                                current_job[key] = 0
+                        elif key == "techstack":
+                            current_job["tech_stack"] = [t.strip() for t in value.split(",")]
+                        else:
+                            current_job[key] = value
+
+        print(f"✓ [{portal_name}] Found {len(jobs_found)} jobs")
+        return jobs_found
+
+    except Exception as e:
+        print(f"✗ [{portal_name}] Error during search: {e}")
+        return []
+
+
+async def search_jobs_multi_portal(require_salary_range: bool = False):
+    """Search for jobs across multiple job portals."""
+    salary_filter_status = "ENABLED" if require_salary_range else "DISABLED"
+    print(f"""
+╔══════════════════════════════════════════════════════════════╗
+║              JOB SEARCH BOT v2.0                              ║
+║══════════════════════════════════════════════════════════════║
+║  Date: {datetime.now().strftime("%Y-%m-%d %H:%M")}                                       ║
+║  Min Score: {MIN_JOB_SCORE}                                                  ║
+║  Salary Range Filter: {salary_filter_status}                                    ║
+╚══════════════════════════════════════════════════════════════╝
+    """)
+
+    # Show portals to search
+    enabled_portals = [k for k in JOB_PORTALS.keys()]
+    print("Portals to search:")
+    for portal_key in enabled_portals:
+        print(f"  - {JOB_PORTALS[portal_key]['name']}")
+
+    # Load stats
+    data = load_applied_jobs()
+    print(f"\nPreviously applied: {data['stats']['total_applied']} jobs")
+    if require_salary_range:
+        print("⚠️  Salary range filter is ENABLED - only jobs with visible salary will be shown")
+    print(f"\nStarting job search...\n")
+
+    all_jobs = []
+
+    for portal_key in enabled_portals:
+        portal_name = JOB_PORTALS[portal_key]["name"]
+        print(f"\n{'─'*60}")
+        print(f"Searching {portal_name}")
+        print(f"{'─'*60}")
+
+        jobs = await search_jobs_on_portal(portal_key, require_salary_range)
+        all_jobs.extend(jobs)
+
+        # Delay between portals
+        if portal_key != enabled_portals[-1]:
+            print(f"Waiting 5 seconds before next portal...")
+            await asyncio.sleep(5)
+
+    # Summary
+    print(f"\n{'═'*60}")
+    print("SEARCH SUMMARY")
+    print(f"{'═'*60}")
+
+    # Filter by salary range if required
+    if require_salary_range:
+        jobs_with_salary = [j for j in all_jobs if j.get("salary_range", "").lower() not in ["not specified", "n/a", ""]]
+        all_jobs = jobs_with_salary
+        print(f"⚠️  Filtered to jobs with salary range: {len(all_jobs)} jobs")
+
+    print(f"Total jobs found: {len(all_jobs)}")
+    
+    # Salary range statistics
+    jobs_with_salary_info = [j for j in all_jobs if j.get("salary_range", "").lower() not in ["not specified", "n/a", ""]]
+    print(f"Jobs with salary range: {len(jobs_with_salary_info)}")
+    
+    # Filter by score
+    high_score_jobs = [j for j in all_jobs if j.get("score", 0) >= MIN_JOB_SCORE]
+    print(f"Jobs with score >= {MIN_JOB_SCORE}: {len(high_score_jobs)}")
+
+    # Show top jobs
+    if all_jobs:
+        sorted_jobs = sorted(all_jobs, key=lambda x: x.get("score", 0), reverse=True)
+        print(f"\nTop 10 jobs by score:")
+        for i, job in enumerate(sorted_jobs[:10], 1):
+            company = job.get("company", "Unknown")
+            title = job.get("title", "Unknown")
+            score = job.get("score", 0)
+            url = job.get("url", "N/A")
+            salary = job.get("salary_range", "Not specified")
+            print(f"  {i}. {company} - {title} (Score: {score}, Salary: {salary})")
+            print(f"     {url}")
+
+    # By portal breakdown
+    print("\nBy Portal:")
+    for portal_key in enabled_portals:
+        portal_jobs = [j for j in all_jobs if j.get("portal") == portal_key]
+        print(f"  - {JOB_PORTALS[portal_key]['name']}: {len(portal_jobs)} jobs")
+
+    return all_jobs
+
+
+# =============================================================================
+# APPLICATION FUNCTIONS
+# =============================================================================
+
+async def apply_to_job_on_portal(portal_key: str, job_number: int, total_jobs: int, require_salary_range: bool = False) -> dict:
+    """Apply to a single job on a specific portal."""
+    applied_jobs = get_applied_job_identifiers()
+    task = build_portal_task(portal_key, job_number, total_jobs, applied_jobs, require_salary_range)
+
+    # Create persistent browser instance for this portal
+    browser = get_browser_for_portal(portal_key)
+    
+    llm = ChatGoogle(model=BROWSER_AGENT_MODEL)
+    agent = Agent(
+        task=task,
+        llm=llm,
+        tools=tools,
+        browser=browser,
         available_file_paths=[str(RESUME_PATH)],
     )
 
@@ -480,9 +772,10 @@ async def apply_to_job_on_portal(portal_key: str, job_number: int, total_jobs: i
         return error_info
 
 
-async def daily_multi_portal_application():
+async def daily_multi_portal_application(require_salary_range: bool = False):
     """Main function to apply across multiple job portals."""
     total_jobs = sum(PORTAL_ALLOCATION.values())
+    salary_filter_status = "ENABLED" if require_salary_range else "DISABLED"
 
     print(f"""
 ╔══════════════════════════════════════════════════════════════╗
@@ -491,6 +784,7 @@ async def daily_multi_portal_application():
 ║  Target: {total_jobs} jobs across {len(PORTAL_ALLOCATION)} portals                              ║
 ║  Date: {datetime.now().strftime("%Y-%m-%d %H:%M")}                                       ║
 ║  Min Score: {MIN_JOB_SCORE}                                                  ║
+║  Salary Range Filter: {salary_filter_status}                                    ║
 ╚══════════════════════════════════════════════════════════════╝
     """)
 
@@ -503,6 +797,8 @@ async def daily_multi_portal_application():
     data = load_applied_jobs()
     print(f"\nPreviously applied: {data['stats']['total_applied']} jobs")
     print(f"Average score: {data['stats']['avg_score']}")
+    if require_salary_range:
+        print("⚠️  Salary range filter is ENABLED - only jobs with visible salary will be applied to")
     print(f"\nStarting applications...\n")
 
     results = []
@@ -519,7 +815,7 @@ async def daily_multi_portal_application():
 
         for i in range(1, job_count + 1):
             job_counter += 1
-            result = await apply_to_job_on_portal(portal_key, i, job_count)
+            result = await apply_to_job_on_portal(portal_key, i, job_count, require_salary_range)
             results.append(result)
 
             # Delay between applications
@@ -559,13 +855,15 @@ async def daily_multi_portal_application():
 # SINGLE PORTAL MODE (for testing)
 # =============================================================================
 
-async def apply_single_portal(portal_key: str = "workatastartup", count: int = 1):
+async def apply_single_portal(portal_key: str = "workatastartup", count: int = 1, require_salary_range: bool = False):
     """Apply to jobs on a single portal (useful for testing)."""
     print(f"Single portal mode: {portal_key}, {count} job(s)")
+    if require_salary_range:
+        print("⚠️  Salary range filter is ENABLED")
 
     results = []
     for i in range(1, count + 1):
-        result = await apply_to_job_on_portal(portal_key, i, count)
+        result = await apply_to_job_on_portal(portal_key, i, count, require_salary_range)
         results.append(result)
         if i < count:
             await asyncio.sleep(5)
@@ -577,9 +875,50 @@ async def apply_single_portal(portal_key: str = "workatastartup", count: int = 1
 # MAIN
 # =============================================================================
 
-if __name__ == "__main__":
-    # Run multi-portal application
-    # asyncio.run(daily_multi_portal_application())
+def get_user_choice() -> tuple[str, bool]:
+    """Prompt user to choose between searching or applying for jobs, and salary range filter."""
+    print("\n" + "="*60)
+    print("JOB SEARCH & APPLICATION BOT")
+    print("="*60)
+    print("\nWhat would you like to do?")
+    print("  1. Search for jobs (browse and list matching jobs)")
+    print("  2. Apply to jobs (automatically apply to matching jobs)")
+    print()
+    
+    while True:
+        choice = input("Enter your choice (1 or 2): ").strip()
+        if choice in ["1", "2"]:
+            break
+        print("Invalid choice. Please enter 1 or 2.")
+    
+    print("\nSalary Range Filter:")
+    print("  This option will only consider jobs that have a visible salary range.")
+    print("  Jobs without salary information will be skipped.")
+    print()
+    
+    while True:
+        salary_filter = input("Require salary range? (y/n): ").strip().lower()
+        if salary_filter in ["y", "yes"]:
+            require_salary = True
+            break
+        elif salary_filter in ["n", "no"]:
+            require_salary = False
+            break
+        print("Invalid choice. Please enter y or n.")
+    
+    return choice, require_salary
 
-    # Or test single portal:
-    asyncio.run(apply_single_portal("workatastartup", 1))
+
+if __name__ == "__main__":
+    choice, require_salary_range = get_user_choice()
+    
+    if choice == "1":
+        # Search for jobs
+        asyncio.run(search_jobs_multi_portal(require_salary_range))
+    else:
+        # Apply to jobs
+        # Run multi-portal application
+        # asyncio.run(daily_multi_portal_application(require_salary_range))
+
+        # Or test single portal:
+        asyncio.run(apply_single_portal("workatastartup", 1, require_salary_range))
