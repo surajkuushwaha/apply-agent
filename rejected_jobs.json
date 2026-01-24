@@ -1,0 +1,30 @@
+{
+  "jobs": [
+    {
+      "portal": "workatastartup",
+      "company": "Optery",
+      "title": "Principal Software Engineer - Data Discovery and Removal Automation Team (Node.js, US-based)",
+      "url": "https://www.workatastartup.com/jobs/87353",
+      "score": 8,
+      "tech_stack": ["Node.js"],
+      "salary_range": "$150K - $195K",
+      "remote": "Yes (US)",
+      "experience": "11+ years",
+      "id": "ec975b0f-7ca5-486c-b5e0-b56880a0e918",
+      "rejection_reason": "score_too_low",
+      "rejected_at": "2026-01-24T12:59:24.830662",
+      "matched_required": ["node"],
+      "matched_bonus": [],
+      "matched_negative": []
+    }
+  ],
+  "stats": {
+    "total_rejected": 1,
+    "by_reason": {
+      "score_too_low": 1
+    },
+    "by_portal": {
+      "workatastartup": 1
+    }
+  }
+}
