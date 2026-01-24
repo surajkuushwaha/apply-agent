@@ -91,7 +91,7 @@ def analyze_job(job_title: str, company: str, description: str) -> dict:
     """
     Perform detailed analysis of a job posting.
 
-    Returns a dict with score, recommendation, and matched keywords.
+    Returns a dict with score, recommendation, matched keywords, and rejection_reason.
     """
     text = f"{job_title} {description}".lower()
 
@@ -100,6 +100,17 @@ def analyze_job(job_title: str, company: str, description: str) -> dict:
     matched_negative = [kw for kw in NEGATIVE_KEYWORDS if kw.lower() in text]
 
     score = calculate_job_score(job_title, company, description)
+    is_blacklisted = company.lower() in [c.lower() for c in BLACKLIST_COMPANIES]
+
+    # Determine rejection reason
+    if is_blacklisted or score == -1:
+        rejection_reason = "blacklisted_company"
+    elif score < 0:
+        rejection_reason = "negative_keywords"
+    elif score < MIN_JOB_SCORE:
+        rejection_reason = "score_too_low"
+    else:
+        rejection_reason = "passed"
 
     return {
         "score": score,
@@ -108,5 +119,6 @@ def analyze_job(job_title: str, company: str, description: str) -> dict:
         "matched_required": matched_required,
         "matched_bonus": matched_bonus,
         "matched_negative": matched_negative,
-        "is_blacklisted": company.lower() in [c.lower() for c in BLACKLIST_COMPANIES],
+        "is_blacklisted": is_blacklisted,
+        "rejection_reason": rejection_reason,
     }

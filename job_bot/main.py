@@ -44,7 +44,11 @@ from .tracking import (
     save_applied_job,
     get_stats_summary,
     get_rate_limit_status,
+    save_viewed_job,
+    save_selected_job,
+    save_rejected_job,
 )
+from .scoring import analyze_job
 from .portals import get_portal, PORTAL_REGISTRY
 
 
@@ -117,11 +121,66 @@ async def search_jobs_on_portal(
                     current_job = {}
                 elif line.startswith("---END---"):
                     if current_job:
+                        # Ensure portal is set
+                        current_job["portal"] = portal_key
                         jobs_found.append(current_job)
                         current_job = {}
                 else:
                     parsed = portal.parse_result_common(line, "---JOB_FOUND---")
                     current_job.update(parsed)
+
+        # Save and categorize all browsed jobs
+        for job in jobs_found:
+            # Ensure portal is set
+            job["portal"] = job.get("portal", portal_key)
+            
+            # Build a description from available fields for analysis
+            # (since search results might not have full description)
+            title = job.get("title", "")
+            company = job.get("company", "")
+            tech_stack = job.get("tech_stack", [])
+            experience = job.get("experience", "")
+            remote = job.get("remote", "")
+            
+            # Construct description from available info
+            description_parts = []
+            if isinstance(tech_stack, list):
+                description_parts.extend(tech_stack)
+            elif isinstance(tech_stack, str):
+                description_parts.append(tech_stack)
+            if experience:
+                description_parts.append(experience)
+            if remote:
+                description_parts.append(remote)
+            
+            description = " ".join(description_parts) if description_parts else title
+            
+            # Analyze job to get rejection reason and matched keywords
+            analysis = analyze_job(title, company, description)
+            
+            # Use score from analysis (or from parsed result if analysis score is 0 and parsed has score)
+            score = analysis.get("score", 0)
+            if score == 0 and job.get("score"):
+                try:
+                    score = int(job.get("score", 0))
+                except (ValueError, TypeError):
+                    score = 0
+            
+            # Update job with score
+            job["score"] = score
+            
+            # Save as viewed
+            save_viewed_job(job)
+            
+            # Categorize based on score and rejection reason
+            rejection_reason = analysis.get("rejection_reason", "score_too_low")
+            
+            if rejection_reason == "passed" or score >= MIN_JOB_SCORE:
+                # Save as selected
+                save_selected_job(job)
+            else:
+                # Save as rejected with reason and analysis
+                save_rejected_job(job, rejection_reason, analysis)
 
         print(f"✓ [{portal.name}] Found {len(jobs_found)} jobs")
         return jobs_found

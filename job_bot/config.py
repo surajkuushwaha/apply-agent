@@ -15,6 +15,9 @@ load_dotenv()
 # =============================================================================
 
 APPLIED_JOBS_FILE = Path("applied_jobs_v2.json")
+VIEWED_JOBS_FILE = Path("viewed_jobs.json")
+SELECTED_JOBS_FILE = Path("selected_jobs.json")
+REJECTED_JOBS_FILE = Path("rejected_jobs.json")
 RESUME_PATH = Path("/Users/suraj/Personal/projects/browser-use/Suraj_Kushwaha_Resumes-1.pdf")
 SESSION_STORAGE_DIR = Path("browser_sessions")
 
@@ -53,12 +56,12 @@ DEFAULT_LINKEDIN_FRESHNESS = "24h"
 RATE_LIMITS = {
     "linkedin": {
         "type": "daily",
-        "limit": 25,
+        "limit": 1,
         "delay_seconds": 10,  # Delay between applications
     },
     "workatastartup": {
         "type": "weekly",
-        "limit": 5,
+        "limit": 1,
         "delay_seconds": 5,
     },
 }

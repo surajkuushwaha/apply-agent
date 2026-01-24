@@ -12,7 +12,13 @@ import uuid
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from .config import APPLIED_JOBS_FILE, RATE_LIMITS
+from .config import (
+    APPLIED_JOBS_FILE,
+    VIEWED_JOBS_FILE,
+    SELECTED_JOBS_FILE,
+    REJECTED_JOBS_FILE,
+    RATE_LIMITS,
+)
 
 
 def load_applied_jobs() -> dict:
@@ -211,3 +217,260 @@ def get_stats_summary() -> str:
         )
 
     return "\n".join(lines)
+
+
+# =============================================================================
+# VIEWED JOBS TRACKING
+# =============================================================================
+
+def load_viewed_jobs() -> dict:
+    """Load viewed jobs from JSON file."""
+    default_data = {
+        "jobs": [],
+        "stats": {
+            "total_viewed": 0,
+            "by_portal": {},
+        }
+    }
+
+    if not VIEWED_JOBS_FILE.exists():
+        return default_data
+
+    with open(VIEWED_JOBS_FILE, "r") as f:
+        data = json.load(f)
+
+    # Ensure stats structure exists
+    if "stats" not in data:
+        data["stats"] = {
+            "total_viewed": len(data.get("jobs", [])),
+            "by_portal": {},
+        }
+
+    return data
+
+
+def save_viewed_jobs(data: dict):
+    """Save the full viewed jobs data to file."""
+    with open(VIEWED_JOBS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def get_viewed_job_identifiers() -> list:
+    """Get list of already viewed job identifiers (company - title - portal)."""
+    data = load_viewed_jobs()
+    return [
+        f"{j.get('company', '')} - {j.get('title', '')} ({j.get('portal', '')})"
+        for j in data["jobs"]
+    ]
+
+
+def is_already_viewed(company: str, title: str, portal: str) -> bool:
+    """Check if a job was already viewed."""
+    identifier = f"{company} - {title} ({portal})"
+    return identifier in get_viewed_job_identifiers()
+
+
+def save_viewed_job(job_info: dict):
+    """
+    Save a viewed job to tracking file.
+
+    Includes: portal, company, title, url, score, tech_stack, salary_range, remote, experience
+    """
+    # Check for duplicates
+    company = job_info.get("company", "")
+    title = job_info.get("title", "")
+    portal = job_info.get("portal", "unknown")
+
+    if is_already_viewed(company, title, portal):
+        return  # Skip duplicates
+
+    data = load_viewed_jobs()
+
+    # Add metadata
+    job_info["id"] = str(uuid.uuid4())
+    job_info["viewed_at"] = datetime.now().isoformat()
+
+    data["jobs"].append(job_info)
+
+    # Update stats
+    data["stats"]["total_viewed"] = len(data["jobs"])
+    data["stats"]["by_portal"][portal] = data["stats"]["by_portal"].get(portal, 0) + 1
+
+    save_viewed_jobs(data)
+
+
+# =============================================================================
+# SELECTED JOBS TRACKING
+# =============================================================================
+
+def load_selected_jobs() -> dict:
+    """Load selected jobs from JSON file."""
+    default_data = {
+        "jobs": [],
+        "stats": {
+            "total_selected": 0,
+            "by_portal": {},
+        }
+    }
+
+    if not SELECTED_JOBS_FILE.exists():
+        return default_data
+
+    with open(SELECTED_JOBS_FILE, "r") as f:
+        data = json.load(f)
+
+    # Ensure stats structure exists
+    if "stats" not in data:
+        data["stats"] = {
+            "total_selected": len(data.get("jobs", [])),
+            "by_portal": {},
+        }
+
+    return data
+
+
+def save_selected_jobs(data: dict):
+    """Save the full selected jobs data to file."""
+    with open(SELECTED_JOBS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def get_selected_job_identifiers() -> list:
+    """Get list of already selected job identifiers (company - title - portal)."""
+    data = load_selected_jobs()
+    return [
+        f"{j.get('company', '')} - {j.get('title', '')} ({j.get('portal', '')})"
+        for j in data["jobs"]
+    ]
+
+
+def is_already_selected(company: str, title: str, portal: str) -> bool:
+    """Check if a job was already selected."""
+    identifier = f"{company} - {title} ({portal})"
+    return identifier in get_selected_job_identifiers()
+
+
+def save_selected_job(job_info: dict):
+    """
+    Save a selected job (score >= MIN_JOB_SCORE) to tracking file.
+
+    Includes same fields as viewed jobs plus selected_at timestamp.
+    """
+    # Check for duplicates
+    company = job_info.get("company", "")
+    title = job_info.get("title", "")
+    portal = job_info.get("portal", "unknown")
+
+    if is_already_selected(company, title, portal):
+        return  # Skip duplicates
+
+    data = load_selected_jobs()
+
+    # Add metadata (remove viewed_at if present, add selected_at)
+    job_info = job_info.copy()  # Don't modify original
+    job_info.pop("viewed_at", None)
+    job_info["id"] = str(uuid.uuid4())
+    job_info["selected_at"] = datetime.now().isoformat()
+
+    data["jobs"].append(job_info)
+
+    # Update stats
+    data["stats"]["total_selected"] = len(data["jobs"])
+    data["stats"]["by_portal"][portal] = data["stats"]["by_portal"].get(portal, 0) + 1
+
+    save_selected_jobs(data)
+
+
+# =============================================================================
+# REJECTED JOBS TRACKING
+# =============================================================================
+
+def load_rejected_jobs() -> dict:
+    """Load rejected jobs from JSON file."""
+    default_data = {
+        "jobs": [],
+        "stats": {
+            "total_rejected": 0,
+            "by_reason": {},
+            "by_portal": {},
+        }
+    }
+
+    if not REJECTED_JOBS_FILE.exists():
+        return default_data
+
+    with open(REJECTED_JOBS_FILE, "r") as f:
+        data = json.load(f)
+
+    # Ensure stats structure exists
+    if "stats" not in data:
+        data["stats"] = {
+            "total_rejected": len(data.get("jobs", [])),
+            "by_reason": {},
+            "by_portal": {},
+        }
+
+    return data
+
+
+def save_rejected_jobs(data: dict):
+    """Save the full rejected jobs data to file."""
+    with open(REJECTED_JOBS_FILE, "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def get_rejected_job_identifiers() -> list:
+    """Get list of already rejected job identifiers (company - title - portal)."""
+    data = load_rejected_jobs()
+    return [
+        f"{j.get('company', '')} - {j.get('title', '')} ({j.get('portal', '')})"
+        for j in data["jobs"]
+    ]
+
+
+def is_already_rejected(company: str, title: str, portal: str) -> bool:
+    """Check if a job was already rejected."""
+    identifier = f"{company} - {title} ({portal})"
+    return identifier in get_rejected_job_identifiers()
+
+
+def save_rejected_job(job_info: dict, rejection_reason: str, analysis: dict):
+    """
+    Save a rejected job with detailed rejection information.
+
+    Args:
+        job_info: Job information dict
+        rejection_reason: Reason for rejection (e.g., "score_too_low", "negative_keywords")
+        analysis: Analysis dict from analyze_job() containing matched keywords
+    """
+    # Check for duplicates
+    company = job_info.get("company", "")
+    title = job_info.get("title", "")
+    portal = job_info.get("portal", "unknown")
+
+    if is_already_rejected(company, title, portal):
+        return  # Skip duplicates
+
+    data = load_rejected_jobs()
+
+    # Build rejected job entry
+    rejected_job = job_info.copy()  # Don't modify original
+    rejected_job.pop("viewed_at", None)
+    rejected_job.pop("selected_at", None)
+    rejected_job["id"] = str(uuid.uuid4())
+    rejected_job["rejection_reason"] = rejection_reason
+    rejected_job["rejected_at"] = datetime.now().isoformat()
+
+    # Add matched keywords from analysis
+    rejected_job["matched_required"] = analysis.get("matched_required", [])
+    rejected_job["matched_bonus"] = analysis.get("matched_bonus", [])
+    rejected_job["matched_negative"] = analysis.get("matched_negative", [])
+
+    data["jobs"].append(rejected_job)
+
+    # Update stats
+    data["stats"]["total_rejected"] = len(data["jobs"])
+    data["stats"]["by_reason"][rejection_reason] = data["stats"]["by_reason"].get(rejection_reason, 0) + 1
+    data["stats"]["by_portal"][portal] = data["stats"]["by_portal"].get(portal, 0) + 1
+
+    save_rejected_jobs(data)
