@@ -6,7 +6,7 @@ import os
 load_dotenv()
 
 TASK = """
-1. Go to https://www.workatastartup.com/jobs/83228
+1. Go to https://www.workatastartup.com/jobs/78968
 
 2. Extract the following company and job details from the page:
    - Company Name

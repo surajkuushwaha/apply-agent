@@ -12,7 +12,11 @@
       "status": "success",
       "cover_letter_used": true,
       "resume_uploaded": false,
-      "tech_stack": ["Typescript", "Postgres", "GraphQL"],
+      "tech_stack": [
+        "Typescript",
+        "Postgres",
+        "GraphQL"
+      ],
       "salary_range": "$165K - $185K",
       "notes": "Applied using a manually drafted cover letter after the generate_cover_letter tool failed.",
       "id": "c67866cf-14a1-4c07-aa97-7e06ed5055d5",
@@ -115,17 +119,99 @@
       "raw_result": "I have reached the maximum number of steps and am unable to complete the job application task as intended. I successfully navigated to the Work at a Startup website, logged in, and applied 'Remote only' and 'Company stage' (Seed to Series B) filters. However, I encountered a persistent issue with the 'Role' filter, which prevented me from filtering jobs by 'Backend Engineer', 'Software Engineer', or 'Platform Engineer'.\n\nI extracted job postings from the page and evaluated several jobs using the `calculate_match_score` tool. Unfortunately, none of the jobs processed so far met the minimum score requirement of 30. For example:\n- 'QA Engineer' at 'VectorShift' scored 8/100.\n- 'Designer' at 'VectorShift' scored 8/100.\n- 'Founding BDR' at 'Feather' scored 0/100.\n- 'Full Stack Software Engineer Intern [Summer 2026]' at 'Swif.ai' scored 0/100.\n- 'Sales Intern [Summer 2026]' at 'Swif.ai' scored 0/100.\n\nDue to the inability to effectively filter by role and the low match scores of the availabl",
       "id": "1eb442c6-9641-4d29-a8e3-d6c5fc1b1702",
       "applied_at": "2026-01-19T12:24:04.696479"
+    },
+    {
+      "portal": "workatastartup",
+      "company": "GoGoGrandparent (YC S16)",
+      "title": "Backend Engineers at GoGoGrandparent (S16)",
+      "url": "https://www.workatastartup.com/jobs/78968",
+      "score": -5,
+      "status": "failed",
+      "cover_letter_used": false,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Node.js",
+        "TypeScript",
+        "MySQL",
+        "REST",
+        "GraphQL",
+        "Vue.js",
+        "AWS",
+        "Docker",
+        "Kubernetes"
+      ],
+      "salary_range": "$80K - $160K",
+      "remote": "yes",
+      "experience": "6+ years",
+      "notes": "Job not applied due to low match score (negative keywords found during analysis).",
+      "yc_batch": "S16",
+      "date": "2026-01-27",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: GoGoGrandparent (YC S16)\nTitle: Backend Engineers at GoGoGrandparent (S16)\nURL: https://www.workatastartup.com/jobs/78968\nScore: -5\nStatus: failed\nCoverLetterUsed: false\nResumeUploaded: false\nTechStack: Node.js, TypeScript, MySQL, REST, GraphQL, Vue.js, AWS, Docker, Kubernetes\nSalaryRange: $80K - $160K\nRemote: yes\nExperience: 6+ years\nNotes: Job not applied due to low match score (negative keywords found during analysis).\n---END---",
+      "id": "723cc4bd-31c7-4d6e-80a1-909b229968f9",
+      "applied_at": "2026-01-27T23:42:45.037579"
+    },
+    {
+      "portal": "workatastartup",
+      "company": "GoGoGrandparent (YC S16)",
+      "title": "Backend Engineers at GoGoGrandparent (S16)",
+      "url": "https://www.workatastartup.com/jobs/78968",
+      "score": -5,
+      "status": "failed",
+      "cover_letter_used": false,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Node.js",
+        "TypeScript",
+        "MySQL",
+        "REST",
+        "GraphQL",
+        "Vue.js",
+        "AWS",
+        "Docker",
+        "Kubernetes"
+      ],
+      "salary_range": "$80K - $160K",
+      "remote": "yes",
+      "experience": "6+ years",
+      "notes": "Job skipped due to low match score (below 30) after analysis.",
+      "yc_batch": "S16",
+      "date": "2026-01-27",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: GoGoGrandparent (YC S16)\nTitle: Backend Engineers at GoGoGrandparent (S16)\nURL: https://www.workatastartup.com/jobs/78968\nScore: -5\nStatus: failed\nCoverLetterUsed: false\nResumeUploaded: false\nTechStack: Node.js, TypeScript, MySQL, REST, GraphQL, Vue.js, AWS, Docker, Kubernetes\nSalaryRange: $80K - $160K\nRemote: yes\nExperience: 6+ years\nNotes: Job skipped due to low match score (below 30) after analysis.\n---END---",
+      "id": "4ede6544-589b-438b-acdf-1107b3f0faf9",
+      "applied_at": "2026-01-27T23:45:19.173169"
+    },
+    {
+      "portal": "workatastartup",
+      "company": "GoGoGrandparent (YC S16)",
+      "title": "Backend Engineers",
+      "url": "https://www.workatastartup.com/jobs/78968",
+      "score": 85,
+      "status": "failed",
+      "cover_letter_used": false,
+      "resume_uploaded": false,
+      "tech_stack": [
+        "Not specified (website inaccessible)"
+      ],
+      "salary_range": "$80K - $160K",
+      "remote": "yes",
+      "experience": "6+ years",
+      "notes": "The Work at a Startup website is currently inaccessible. Multiple attempts to navigate to the job posting and the main website have resulted in an empty browser state, preventing further interaction and application submission.",
+      "date": "2026-01-27",
+      "raw_result": "---JOB_APPLIED---\nPortal: workatastartup\nCompany: GoGoGrandparent (YC S16)\nTitle: Backend Engineers\nURL: https://www.workatastartup.com/jobs/78968\nScore: 85\nStatus: failed\nCoverLetterUsed: false\nResumeUploaded: false\nTechStack: Not specified (website inaccessible)\nSalaryRange: $80K - $160K\nRemote: yes\nExperience: 6+ years\nNotes: The Work at a Startup website is currently inaccessible. Multiple attempts to navigate to the job posting and the main website have resulted in an empty browser state, preventing further interaction and application submission.\n---END---",
+      "id": "8228e5ac-25c0-40b5-8646-ae75688687e6",
+      "applied_at": "2026-01-27T23:54:04.732187"
     }
   ],
   "stats": {
-    "total_applied": 5,
+    "total_applied": 8,
     "by_portal": {
-      "workatastartup": 5
+      "workatastartup": 8
     },
     "by_status": {
       "success": 2,
-      "failed": 2
+      "failed": 5
     },
-    "avg_score": 56.0
-  }
+    "avg_score": 42.7
+  },
+  "rate_limits": {}
 }

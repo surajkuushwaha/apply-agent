@@ -37,6 +37,7 @@ from .config import (
     LINKEDIN_FRESHNESS,
     DEFAULT_LINKEDIN_FRESHNESS,
     RATE_LIMITS,
+    CANDIDATE_PROFILE,
 )
 from .tools import tools
 from .tracking import (
@@ -423,6 +424,188 @@ async def apply_single_portal(
 
 
 # =============================================================================
+# APPLY TO SPECIFIC JOB URL
+# =============================================================================
+
+async def apply_to_specific_job_url(job_url: str, dry_run: bool = False) -> dict:
+    """
+    Apply to a specific job URL.
+    
+    Args:
+        job_url: The full URL of the job posting
+        dry_run: If True, simulate without actually applying
+    
+    Returns:
+        dict: Application result information
+    """
+    # Determine portal from URL
+    if "workatastartup.com" in job_url:
+        portal_key = "workatastartup"
+    elif "linkedin.com" in job_url:
+        portal_key = "linkedin"
+    else:
+        print(f"⚠️  Unknown portal for URL: {job_url}")
+        print("Supported portals: Work at a Startup, LinkedIn")
+        return {
+            "status": "failed",
+            "error": "Unknown portal",
+            "url": job_url,
+        }
+    
+    portal = get_portal(portal_key)
+    
+    # Check rate limits
+    rate_status = get_rate_limit_status(portal_key)
+    if not rate_status["can_apply"]:
+        print(f"⚠️  Rate limit reached for {portal.name}")
+        print(f"   Used: {rate_status['used']}/{rate_status['limit']}")
+        print(f"   {rate_status['reset_info']}")
+        return {
+            "portal": portal_key,
+            "status": "skipped",
+            "reason": "rate_limit_reached",
+            "url": job_url,
+        }
+    
+    print(f"\n{'='*60}")
+    print(f"Applying to job on {portal.name}")
+    print(f"URL: {job_url}")
+    print(f"Rate limit: {rate_status['remaining']}/{rate_status['limit']} remaining")
+    print(f"{'='*60}\n")
+    
+    if dry_run:
+        print("[DRY RUN] Would apply to job URL")
+        print(f"[DRY RUN] Rate limit: {rate_status['remaining']}/{rate_status['limit']} remaining")
+        return {
+            "portal": portal_key,
+            "url": job_url,
+            "status": "dry_run",
+            "date": datetime.now().strftime("%Y-%m-%d"),
+        }
+    
+    # Build task prompt
+    task = f"""
+TASK: Apply to a specific job posting on {portal.name}
+
+{CANDIDATE_PROFILE}
+
+JOB URL: {job_url}
+
+CRITICAL: DO NOT use analyze_job_action or calculate_match_score tools. The user has explicitly provided this URL and wants to apply directly. Skip all analysis and scoring - proceed directly to applying.
+
+STEPS:
+
+1. Navigate directly to the job URL: {job_url}
+   - The browser should already have your login context, so you should be logged in
+   - If you see a login page, use the login credentials:
+     Email/Username: {portal.username}
+     Password: {portal.password}
+
+2. Read the job posting to extract basic information:
+   - Extract the job title and company name (you can use the extract tool if needed)
+   - DO NOT use analyze_job_action tool
+   - DO NOT use calculate_match_score tool
+   - Just read the page to understand what you're applying to
+
+3. Apply to the job:
+   - Click the "Apply" or "Quick Apply" button
+   - If a cover letter field is present, use generate_cover_letter_action tool to create a tailored cover letter
+   - Upload your resume from: {RESUME_PATH}
+   - Fill in all required fields using information from the candidate profile:
+     * Name: Suraj Kushwaha
+     * Email: jobs@surajkuushwaha.com
+     * Phone: +91 91067 64917
+     * GitHub: github.com/surajkuushwaha
+     * LinkedIn: linkedin.com/in/surajkuushwaha
+     * Experience: 4+ years as Senior Backend Engineer
+   - Review all information before submitting
+   - Submit the application
+
+4. After applying, return this EXACT format:
+   ---JOB_APPLIED---
+   Portal: {portal_key}
+   Company: [company name]
+   Title: [job title]
+   URL: {job_url}
+   Score: N/A
+   Status: [success/failed]
+   CoverLetterUsed: [true/false]
+   ResumeUploaded: [true/false]
+   TechStack: [comma-separated tech mentioned if visible on page]
+   SalaryRange: [if visible, else "Not specified"]
+   Remote: [yes/no/not specified]
+   Experience: [required experience level if visible]
+   Notes: [any relevant notes about the application]
+   ---END---
+
+CRITICAL INSTRUCTIONS:
+- DO NOT call analyze_job_action - skip it entirely
+- DO NOT call calculate_match_score - skip it entirely
+- Proceed directly to applying to the job
+- Use generate_cover_letter_action if a cover letter field exists
+- Upload the resume file from {RESUME_PATH}
+- Fill all required fields accurately
+- Complete the application process fully
+- If the application fails, note the reason in the Notes field
+"""
+    
+    browser = get_browser_for_portal(portal_key)
+    llm = ChatGoogle(model=BROWSER_AGENT_MODEL)
+    agent = Agent(
+        task=task,
+        llm=llm,
+        tools=tools,
+        browser=browser,
+        available_file_paths=[str(RESUME_PATH)],
+    )
+    
+    try:
+        print("Starting browser automation...")
+        history = await agent.run(max_steps=60)
+        result = history.final_result() if history else "No result"
+        
+        # Parse result
+        job_info = portal.parse_job_result(result) if result else {}
+        job_info.update({
+            "portal": portal_key,
+            "url": job_url,
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "raw_result": str(result)[:1000] if result else ""
+        })
+        
+        # Save application
+        save_applied_job(job_info)
+        
+        # Print summary
+        print(f"\n{'='*60}")
+        print("APPLICATION RESULT")
+        print(f"{'='*60}")
+        print(f"Company: {job_info.get('company', 'Unknown')}")
+        print(f"Title: {job_info.get('title', 'Unknown')}")
+        print(f"Status: {job_info.get('status', 'unknown')}")
+        print(f"Score: {job_info.get('score', 'N/A')}")
+        print(f"Cover Letter Used: {job_info.get('cover_letter_used', False)}")
+        print(f"Resume Uploaded: {job_info.get('resume_uploaded', False)}")
+        if job_info.get('notes'):
+            print(f"Notes: {job_info['notes']}")
+        print(f"{'='*60}\n")
+        
+        return job_info
+        
+    except Exception as e:
+        error_info = {
+            "portal": portal_key,
+            "url": job_url,
+            "status": "failed",
+            "error": str(e),
+            "date": datetime.now().strftime("%Y-%m-%d")
+        }
+        save_applied_job(error_info)
+        print(f"\n✗ Error during application: {e}")
+        return error_info
+
+
+# =============================================================================
 # OUTPUT HELPERS
 # =============================================================================
 
@@ -510,15 +693,41 @@ def get_user_choice() -> dict:
     print("  1. Search for jobs (browse and list matching jobs)")
     print("  2. Apply to jobs (automatically apply to matching jobs)")
     print("  3. View stats (see application history and rate limits)")
+    print("  4. Apply to specific job URL (apply to a job by providing its URL)")
 
     while True:
-        choice = input("\nEnter your choice (1, 2, or 3): ").strip()
-        if choice in ["1", "2", "3"]:
+        choice = input("\nEnter your choice (1, 2, 3, or 4): ").strip()
+        if choice in ["1", "2", "3", "4"]:
             break
-        print("Invalid choice. Please enter 1, 2, or 3.")
+        print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
     if choice == "3":
         return {"mode": "stats"}
+    
+    if choice == "4":
+        # Get job URL
+        print("\nEnter the job URL:")
+        print("  Example: https://www.workatastartup.com/jobs/78968")
+        while True:
+            job_url = input("\nJob URL: ").strip()
+            if job_url.startswith("http://") or job_url.startswith("https://"):
+                break
+            print("Invalid URL. Please provide a full URL starting with http:// or https://")
+        
+        # Dry run option
+        print("\nDry run mode?")
+        print("  This will simulate the process without actually applying.")
+        while True:
+            dry_run_choice = input("\nEnable dry run? (y/n, default n): ").strip().lower() or "n"
+            if dry_run_choice in ["y", "yes", "n", "no"]:
+                break
+            print("Invalid choice.")
+        
+        return {
+            "mode": "apply_url",
+            "job_url": job_url,
+            "dry_run": dry_run_choice in ["y", "yes"],
+        }
 
     mode = "search" if choice == "1" else "apply"
 
@@ -596,6 +805,13 @@ async def main():
 
     if options["mode"] == "stats":
         print("\n" + get_stats_summary())
+        return
+    
+    if options["mode"] == "apply_url":
+        await apply_to_specific_job_url(
+            job_url=options["job_url"],
+            dry_run=options["dry_run"],
+        )
         return
 
     # Temporarily update PORTAL_ALLOCATION if specific portals selected
